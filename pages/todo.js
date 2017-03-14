@@ -5,14 +5,24 @@ export default props => (
         <TodoMVC/>
     </div>
 )
-
+const ENTER_KEY = 13
+const TodoInput = props => (
+    <input placeholder="Add todo item..." type="text" value={props.value}
+           onChange={(event) => props.onChange(event)}
+           onKeyPress={event => {
+               if (event.which === ENTER_KEY) {
+                   props.onEnter()
+               }
+           }}
+    />
+)
 
 const TodoList = props => (
     <ul>
         {
             Object.keys(props.items)
                 .map(index => (<li key={index} style={{listStyleType: 'none'}}>
-                    <input type="checkbox"/>{props.items[index]}
+                    <input type="checkbox" onClick={() => props.onCheck(index)}/>{props.items[index]}
                     <button onClick={() => props.onDelete(index)}>x</button>
                 </li>))
         }
@@ -32,26 +42,27 @@ class TodoMVC extends Component {
     render() {
         return (
             <div>
-                <input placeholder="Add todo item..." type="text" value={this.state.value}
-                       onChange={event => {
-                           this.setState({value: event.target.value})
-                       }}
-                       onKeyPress={event => {
-                           if (event.which === 13) {
-                               this.setState(pre => ({
-                                   items: [...pre.items, this.state.value],
+                <TodoInput value={this.state.value}
+                           onChange={event => {
+                               this.setState({value: event.target.value})
+                           }}
+                           onEnter={() => {
+                               this.setState({
+                                   items: [...this.state.items, this.state.value],
                                    value: ''
-                               }))
-                           }
-                       }}
+                               })
+                           }}
                 />
 
-                <TodoList items={this.state.items} onDelete={ index => {
-                    this.setState(pre => {
-                        pre.items.splice(index, 1)
-                        {items: pre.items}
-                    })
-                }}/>
+                <TodoList items={this.state.items}
+                          onCheck={index => {
+
+                          }}
+                          onDelete={ index => {
+                              this.setState({
+                                  items: this.state.items.filter((item, ix) => ix != index)
+                              })
+                          }}/>
             </div>
         )
     }
