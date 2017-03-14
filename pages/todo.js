@@ -21,8 +21,10 @@ const TodoList = props => (
     <ul>
         {
             Object.keys(props.items)
-                .map(index => (<li key={index} style={{listStyleType: 'none'}}>
-                    <input type="checkbox" onClick={() => props.onCheck(index)}/>{props.items[index]}
+                .map(index => (<li key={index} style={{listStyleType: 'none', textDecoration: props.status[index]}}>
+                    <input type="checkbox" onClick={(event) => {
+                        props.onCheck(event, index)
+                    }}/>{props.items[index]}
                     <button onClick={() => props.onDelete(index)}>x</button>
                 </li>))
         }
@@ -35,6 +37,7 @@ class TodoMVC extends Component {
         super()
         this.state = {
             items: [],
+            status: [],
             value: ''
         }
     }
@@ -55,8 +58,12 @@ class TodoMVC extends Component {
                 />
 
                 <TodoList items={this.state.items}
-                          onCheck={index => {
-
+                          status={this.state.status}
+                          onCheck={(event, index) => {
+                              this.state.status[index] = event.target.checked ? 'line-through' : ''
+                              this.setState({
+                                  status: this.state.status
+                              })
                           }}
                           onDelete={ index => {
                               this.setState({
