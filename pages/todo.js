@@ -31,6 +31,14 @@ const TodoList = props => (
     </ul>
 )
 
+const TodoFilter = props => (
+    <div>
+        <button onClick={() => props.showAll()}>All</button>
+        <button onClick={() => props.showActive()}>Active</button>
+        <button onClick={() => props.showCompleted()}>Completed</button>
+    </div>
+)
+
 class TodoMVC extends Component {
 
     constructor() {
@@ -45,7 +53,15 @@ class TodoMVC extends Component {
     render() {
         return (
             <div>
-                <TodoInput value={this.state.value}
+                <TodoFilter
+                    showAll={() => {
+                    }}
+                    showActive={() => {
+                    }}
+                    showCompleted={() => {
+
+                    }}/>
+                <TodoInput value={this.state.inputValue}
                            onChange={event => {
                                this.setState({value: event.target.value})
                            }}
