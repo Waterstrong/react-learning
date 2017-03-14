@@ -46,7 +46,7 @@ class TodoMVC extends Component {
         this.state = {
             items: [],
             status: [],
-            value: ''
+            inputValue: ''
         }
     }
 
@@ -63,13 +63,15 @@ class TodoMVC extends Component {
                     }}/>
                 <TodoInput value={this.state.inputValue}
                            onChange={event => {
-                               this.setState({value: event.target.value})
+                               this.setState({inputValue: event.target.value})
                            }}
                            onEnter={() => {
-                               this.setState({
-                                   items: [...this.state.items, this.state.value],
-                                   value: ''
-                               })
+                               if (this.state.inputValue) {
+                                   this.setState({
+                                       items: [...this.state.items, this.state.inputValue],
+                                       inputValue: ''
+                                   })
+                               }
                            }}
                 />
 
