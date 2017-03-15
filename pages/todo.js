@@ -6,6 +6,7 @@ export default props => (
     </div>
 )
 const ENTER_KEY = 13
+const COMPLETED = 'COMPLETED'
 const TodoInput = props => (
     <input placeholder="Add todo item..." type="text" value={props.value}
            onChange={(event) => props.onChange(event)}
@@ -21,10 +22,13 @@ const TodoList = props => (
     <ul>
         {
             Object.keys(props.items)
-                .map(index => (<li key={index} style={{listStyleType: 'none', textDecoration: props.status[index]}}>
+                .map(index => (<li key={index} style={{
+                    listStyleType: 'none',
+                    textDecoration: props.items[index].status === COMPLETED ? 'line-through' : ''
+                }}>
                     <input type="checkbox" onClick={(event) => {
                         props.onCheck(event, index)
-                    }}/>{props.items[index]}
+                    }}/>{props.items[index].value}
                     <button onClick={() => props.onDelete(index)}>x</button>
                 </li>))
         }
@@ -45,7 +49,6 @@ class TodoMVC extends Component {
         super()
         this.state = {
             items: [],
-            status: [],
             inputValue: ''
         }
     }
@@ -68,7 +71,7 @@ class TodoMVC extends Component {
                            onEnter={() => {
                                if (this.state.inputValue) {
                                    this.setState({
-                                       items: [...this.state.items, this.state.inputValue],
+                                       items: [...this.state.items, {value: this.state.inputValue, status: ''}],
                                        inputValue: ''
                                    })
                                }
@@ -76,11 +79,10 @@ class TodoMVC extends Component {
                 />
 
                 <TodoList items={this.state.items}
-                          status={this.state.status}
                           onCheck={(event, index) => {
-                              this.state.status[index] = event.target.checked ? 'line-through' : ''
+                              this.state.items[index].status = event.target.checked ? COMPLETED : ''
                               this.setState({
-                                  status: this.state.status
+                                  items: this.state.items
                               })
                           }}
                           onDelete={ index => {
